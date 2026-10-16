@@ -298,6 +298,14 @@ import { something } from 'shared';
 
 A failing check blocks the commit.
 
+### Continuous integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every pull request to `master` and
+every push to `master`. In order, it: builds `shared`, then runs `pnpm format:check`,
+`pnpm lint:ci` (ESLint with `--max-warnings=0`), `pnpm type-check`, the `shared` and `backend`
+tests, and a `frontend` production build. Unlike the pre-commit hook, CI can't be bypassed with
+`--no-verify`, so it's the authoritative gate before merge.
+
 ### Manual checks
 
 ```bash
