@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useCurrentUser } from '@/features/auth/hooks/use-current-user';
+import { logout } from '@/features/auth/services/auth.api';
 import { tokenStorage } from '@/services/token-storage';
 import { useAuthStore } from '@/store/auth.store';
 
@@ -22,7 +23,14 @@ export function AccountMenu() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      // Best effort: an already-expired token can't be revoked, and either way
+      // the local session ends below.
+      console.warn('Server-side logout failed; tokens were not revoked', error);
+    }
     tokenStorage.clearTokens();
     useAuthStore.getState().clear();
     navigate('/login');
