@@ -301,10 +301,20 @@ A failing check blocks the commit.
 ### Continuous integration
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every pull request to `master` and
-every push to `master`. In order, it: builds `shared`, then runs `pnpm format:check`,
-`pnpm lint:ci` (ESLint with `--max-warnings=0`), `pnpm type-check`, the `shared` and `backend`
-tests, and a `frontend` production build. Unlike the pre-commit hook, CI can't be bypassed with
-`--no-verify`, so it's the authoritative gate before merge.
+every push to `master`, as **path-filtered parallel jobs** so a change only runs the checks it can
+affect:
+
+- **`quality`** (always) — builds `shared`, then `pnpm format:check`, `pnpm lint:ci` (ESLint with
+  `--max-warnings=0`), and `pnpm type-check` across all workspaces.
+- **`shared`** — `pnpm --filter shared test`, when `packages/shared` or root config changes.
+- **`backend`** — `pnpm --filter backend test`, when `apps/backend`, `shared`, or root config
+  changes.
+- **`frontend`** — `pnpm --filter frontend build` (smoke test; no frontend test runner yet), when
+  `apps/frontend`, `shared`, or root config changes.
+
+A final **`ci`** job aggregates the results and is the single required status check — it passes when
+every relevant job succeeded (a skipped path-gated job counts as a pass). Unlike the pre-commit
+hook, CI can't be bypassed with `--no-verify`, so it's the authoritative gate before merge.
 
 ### Manual checks
 
