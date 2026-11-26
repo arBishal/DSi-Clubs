@@ -301,20 +301,18 @@ A failing check blocks the commit.
 ### Continuous integration
 
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every pull request to `master` and
-every push to `master`, as **path-filtered parallel jobs** so a change only runs the checks it can
-affect:
+every push to `master`, as **four parallel jobs** (each builds `shared` first, since the apps
+resolve it from its `dist/`):
 
-- **`quality`** (always) — builds `shared`, then `pnpm format:check`, `pnpm lint:ci` (ESLint with
-  `--max-warnings=0`), and `pnpm type-check` across all workspaces.
-- **`shared`** — `pnpm --filter shared test`, when `packages/shared` or root config changes.
-- **`backend`** — `pnpm --filter backend test`, when `apps/backend`, `shared`, or root config
-  changes.
-- **`frontend`** — `pnpm --filter frontend build` (smoke test; no frontend test runner yet), when
-  `apps/frontend`, `shared`, or root config changes.
+- **`quality`** — `pnpm format:check`, `pnpm lint:ci` (ESLint with `--max-warnings=0`), and
+  `pnpm type-check` across all workspaces.
+- **`shared`** — `pnpm --filter shared test`.
+- **`backend`** — `pnpm --filter backend test`.
+- **`frontend`** — `pnpm --filter frontend build` (smoke test; no frontend test runner yet).
 
-A final **`ci`** job aggregates the results and is the single required status check — it passes when
-every relevant job succeeded (a skipped path-gated job counts as a pass). Unlike the pre-commit
-hook, CI can't be bypassed with `--no-verify`, so it's the authoritative gate before merge.
+They run concurrently, so the total wait is roughly the slowest job. All four are required status
+checks. Unlike the pre-commit hook, CI can't be bypassed with `--no-verify`, so it's the
+authoritative gate before merge.
 
 ### Manual checks
 

@@ -6,233 +6,78 @@ on:
   push:
     branches: [master]
 
+# Least-privilege default token: CI only reads the repo (checkout + install).
+permissions:
+  contents: read
+
+# Four jobs that all run at the same time, so the total wait is about as long as the slowest one.
+# Each job runs on its own machine and repeats the setup (checkout, pnpm, Node, install, build shared).
 jobs:
-  # Decide which areas changed so the per-app jobs below can skip when a change
-  # can't affect them. The two apps are decoupled (no cross-imports, no cross
-  # dependency); their only shared surface is `packages/shared` + root config,
-  # which fan out to both. See CI-PLAN.md §3.3/§3.7.
-  changes:
-    name: Detect changes
-    runs-on: ubuntu-latest
-    outputs:
-      shared: ${{ steps.filter.outputs.shared }}
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Compute changed areas
-        id: filter
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            base="${{ github.event.pull_request.base.sha }}"
-            head="${{ github.event.pull_request.head.sha }}"
-          else
-            base="${{ github.event.before }}"
-            head="${{ github.sha }}"
-          fi
-
-          # Fail open: if the base commit isn't available (first push, force-push,
-          # shallow history), run everything rather than skip real checks.
-          if [ -z "$base" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
-            echo "Base commit unavailable ('$base'); running all jobs."
-            {
-              echo "shared=true"
-              echo "backend=true"
-              echo "frontend=true"
-            } >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          changed="$(git diff --name-only "$base" "$head")"
-          echo "Changed files:"
-          echo "$changed"
-
-          # Root/config changes affect every workspace.
-          root_re='^(package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|tsconfig.*\.json|\.github/workflows/ci\.yml)'
-          shared_re='^packages/shared/'
-          backend_re='^apps/backend/'
-          frontend_re='^apps/frontend/'
-
-          match() { echo "$changed" | grep -Eq "$1"; }
-
-          shared=false; backend=false; frontend=false
-
-          if match "$root_re" || match "$shared_re"; then
-            shared=true; backend=true; frontend=true
-          fi
-          if match "$backend_re"; then backend=true; fi
-          if match "$frontend_re"; then frontend=true; fi
-
-          echo "Resolved -> shared=$shared backend=$backend frontend=$frontend"
-          {
-            echo "shared=$shared"
-            echo "backend=$backend"
-            echo "frontend=$frontend"
-          } >> "$GITHUB_OUTPUT"
-
-  # Repo-wide checks that must see the whole tree. Always runs. `type-check` is
-  # where a `shared` edit surfaces as a break in either app, so it is not gated.
   quality:
     name: Format · Lint · Type-check
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.16.1
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
+      - run: pnpm install --frozen-lockfile
       # Build first: type-check resolves `shared` from its dist/.
-      - name: Build shared
-        run: pnpm --filter shared build
-
-      - name: Format check
-        run: pnpm format:check
-
-      - name: Lint
-        run: pnpm lint:ci
-
-      - name: Type check
-        run: pnpm type-check
+      - run: pnpm --filter shared build
+      - run: pnpm format:check
+      - run: pnpm lint:ci
+      - run: pnpm type-check
 
   shared:
     name: Test shared
-    needs: changes
-    if: needs.changes.outputs.shared == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.16.1
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build shared
-        run: pnpm --filter shared build
-
-      - name: Test shared
-        run: pnpm --filter shared test
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter shared build
+      - run: pnpm --filter shared test
 
   backend:
     name: Test backend
-    needs: changes
-    if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.16.1
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
+      - run: pnpm install --frozen-lockfile
       # Backend tests resolve `shared` from its dist/.
-      - name: Build shared
-        run: pnpm --filter shared build
-
-      - name: Test backend
-        run: pnpm --filter backend test
+      - run: pnpm --filter shared build
+      - run: pnpm --filter backend test
 
   frontend:
     name: Build frontend
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.16.1
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
+      - run: pnpm install --frozen-lockfile
       # Frontend build resolves `shared` from its dist/.
-      - name: Build shared
-        run: pnpm --filter shared build
-
-      - name: Build frontend
-        run: pnpm --filter frontend build
-
-  # Single always-running gate. Branch protection requires THIS check (not the
-  # path-gated jobs, which legitimately skip). Passes when needed jobs succeed
-  # or are skipped; fails on any failure/cancellation. See CI-PLAN.md §3.7.
-  ci:
-    name: CI
-    if: always()
-    needs: [changes, quality, shared, backend, frontend]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Verify required jobs passed
-        shell: bash
-        run: |
-          set -euo pipefail
-          results=(
-            "changes:${{ needs.changes.result }}"
-            "quality:${{ needs.quality.result }}"
-            "shared:${{ needs.shared.result }}"
-            "backend:${{ needs.backend.result }}"
-            "frontend:${{ needs.frontend.result }}"
-          )
-          failed=0
-          for r in "${results[@]}"; do
-            name="${r%%:*}"
-            status="${r#*:}"
-            echo "$name -> $status"
-            if [ "$status" = "failure" ] || [ "$status" = "cancelled" ]; then
-              failed=1
-            fi
-          done
-          if [ "$failed" -ne 0 ]; then
-            echo "::error::One or more required jobs did not pass."
-            exit 1
-          fi
-          echo "All required jobs passed or were skipped."
+      - run: pnpm --filter shared build
+      - run: pnpm --filter frontend build
