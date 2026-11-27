@@ -1,70 +1,90 @@
-import { MoveRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Code2,
+  Coffee,
+  Cpu,
+  Server,
+  Shield,
+  Smartphone,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
-import devopsImg from '@/assets/clubs/devops.png';
-import frontendImg from '@/assets/clubs/frontend.png';
-import javaImg from '@/assets/clubs/java.png';
-import securityImg from '@/assets/clubs/security.png';
-import { TONE } from '../landing.constants';
+import { Button } from '@/components/ui/button';
 import { useClubs } from '../hooks/use-landing';
 
-/** Exact Stitch tile artwork, keyed by club id. */
-const CLUB_IMAGES: Record<string, string> = {
-  frontend: frontendImg,
-  java: javaImg,
-  devops: devopsImg,
-  security: securityImg,
+/** Icon per club id — keeps the cards image-free and consistent. */
+const CLUB_ICONS: Record<string, LucideIcon> = {
+  frontend: Code2,
+  java: Coffee,
+  devops: Server,
+  security: Shield,
+  data: Cpu,
+  mobile: Smartphone,
 };
 
 export function ClubsSection() {
+  const navigate = useNavigate();
   const { data: clubs = [], isLoading } = useClubs();
 
   return (
-    <section className="border-y bg-card py-16">
-      <div className="mx-auto max-w-[1800px] px-6">
-        <div className="mb-16 flex flex-col items-end justify-between gap-4 md:flex-row">
-          <div>
-            <h2 className="font-heading text-4xl font-bold">Find Your Tribe</h2>
-            <p className="mt-3 text-lg text-muted-foreground">
-              Specialized guilds for every engineering discipline.
-            </p>
-          </div>
-          <a
-            href="#"
-            className="flex items-center gap-2 text-lg font-bold text-primary hover:underline"
-          >
-            View All 12 Clubs
-            <MoveRight className="size-5" />
-          </a>
-        </div>
-
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {isLoading
-            ? Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-[400px] animate-pulse rounded-[2rem] bg-muted"
-                />
-              ))
-            : clubs.map((club) => (
-                <div
-                  key={club.id}
-                  className="group relative h-[400px] overflow-hidden rounded-[2rem]"
-                >
-                  <img
-                    src={CLUB_IMAGES[club.id]}
-                    alt={`${club.name} club`}
-                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
+    <section className="bg-gray-50 py-24 lg:py-32">
+      <div className="px-6 lg:px-12">
+        <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
+          {/* Left: card grid */}
+          <div className="order-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:order-1 lg:col-span-2 lg:grid-cols-3">
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, i) => (
                   <div
-                    className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t to-transparent p-10 text-white ${TONE[club.tone].gradient}`}
-                  >
-                    <h4 className="mb-2 font-heading text-3xl font-semibold">
-                      {club.name}
-                    </h4>
-                    <p className="text-lg text-white/90">{club.blurb}</p>
-                  </div>
-                </div>
-              ))}
+                    key={i}
+                    className="h-56 animate-pulse rounded-xl bg-card"
+                  />
+                ))
+              : clubs.map((club) => {
+                  const Icon = CLUB_ICONS[club.id] ?? Code2;
+                  return (
+                    <button
+                      key={club.id}
+                      type="button"
+                      onClick={() => navigate('/explore')}
+                      className="group flex flex-col items-start rounded-xl border bg-card p-8 text-left transition-colors hover:border-foreground/30"
+                    >
+                      <Icon
+                        className="size-8 text-foreground"
+                        strokeWidth={1.5}
+                      />
+                      <h3 className="mt-12 flex items-center gap-2 font-heading text-lg font-semibold text-foreground">
+                        {club.name}
+                        <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                        {club.blurb}
+                      </p>
+                    </button>
+                  );
+                })}
+          </div>
+
+          {/* Right: title block + CTA */}
+          <div className="order-1 lg:order-2 lg:col-span-1">
+            <p className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-foreground">
+              <span className="size-2 rounded-[2px] bg-primary" />
+              The Klubs
+            </p>
+            <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Find your club
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              A focused path for every engineering discipline.
+            </p>
+            <Button
+              variant="link"
+              className="mt-8 h-auto p-0 text-foreground"
+              onClick={() => navigate('/explore')}
+            >
+              Browse all clubs
+            </Button>
+          </div>
         </div>
       </div>
     </section>

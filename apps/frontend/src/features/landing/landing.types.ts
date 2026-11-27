@@ -1,13 +1,11 @@
 import type { LucideIcon } from 'lucide-react';
 
-/** Accent tones mapped to concrete classes in `landing.constants.ts`. */
-export type AccentTone = 'primary' | 'emerald' | 'indigo' | 'amber';
-
 export interface Benefit {
   title: string;
   description: string;
   icon: LucideIcon;
-  tone: AccentTone;
+  /** Short label shown beside the icon in the card footer. */
+  tag: string;
 }
 
 export interface Step {
@@ -15,23 +13,18 @@ export interface Step {
   title: string;
   description: string;
   icon: LucideIcon;
-  tone: AccentTone;
 }
 
 export interface Stat {
   id: string;
   value: string;
   label: string;
-  tone: AccentTone;
 }
 
 export interface Club {
   id: string;
   name: string;
   blurb: string;
-  tone: AccentTone | 'slate';
-  /** `wide` clubs span two columns in the bento grid. */
-  span: 'default' | 'wide';
 }
 
 export interface Testimonial {
@@ -39,7 +32,6 @@ export interface Testimonial {
   name: string;
   role: string;
   quote: string;
-  tone: AccentTone;
 }
 
 export interface Faq {

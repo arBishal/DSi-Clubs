@@ -10,49 +10,41 @@ import type { Club, Faq, Stat, Testimonial } from '../landing.types';
  */
 
 const STATS: Stat[] = [
-  {
-    id: 'engineers',
-    value: '500+',
-    label: 'Active Engineers',
-    tone: 'primary',
-  },
-  {
-    id: 'sessions',
-    value: '45+',
-    label: 'Weekly Study Sessions',
-    tone: 'emerald',
-  },
-  { id: 'support', value: '100%', label: 'Peer Support Rate', tone: 'indigo' },
+  { id: 'engineers', value: '500+', label: 'Active engineers' },
+  { id: 'sessions', value: '45+', label: 'Weekly study sessions' },
+  { id: 'support', value: '100%', label: 'Peer support rate' },
 ];
 
 const CLUBS: Club[] = [
   {
     id: 'frontend',
     name: 'Frontend',
-    blurb: 'React, Tailwind, and Design Systems at scale.',
-    tone: 'primary',
-    span: 'wide',
+    blurb: 'React, Tailwind, and design systems at scale.',
   },
   {
     id: 'java',
     name: 'Java',
-    blurb: 'Spring Boot & Microservices.',
-    tone: 'indigo',
-    span: 'default',
+    blurb: 'Spring Boot and microservices.',
   },
   {
     id: 'devops',
     name: 'DevOps',
-    blurb: 'K8s, CI/CD, and IaC.',
-    tone: 'emerald',
-    span: 'default',
+    blurb: 'Kubernetes, CI/CD, and infrastructure as code.',
   },
   {
     id: 'security',
     name: 'Security',
-    blurb: 'OWASP Top 10, Pen Testing, and Secure Design.',
-    tone: 'slate',
-    span: 'wide',
+    blurb: 'OWASP Top 10, pen testing, and secure design.',
+  },
+  {
+    id: 'data',
+    name: 'Data & AI',
+    blurb: 'Python, machine learning, and data pipelines.',
+  },
+  {
+    id: 'mobile',
+    name: 'Mobile',
+    blurb: 'iOS, Android, and React Native.',
   },
 ];
 
@@ -63,7 +55,6 @@ const TESTIMONIALS: Testimonial[] = [
     role: 'Front-end Lead',
     quote:
       "The Frontend Club wasn't just about learning React. It was about learning how to think in components at an enterprise scale. I landed my Senior role shortly after finishing my first project here.",
-    tone: 'primary',
   },
   {
     id: 'marcus',
@@ -71,7 +62,6 @@ const TESTIMONIALS: Testimonial[] = [
     role: 'DevOps Engineer',
     quote:
       'Having direct access to mentors who manage million-dollar cloud budgets is invaluable. The DevOps curriculum here is practical and battle-tested.',
-    tone: 'emerald',
   },
   {
     id: 'elena',
@@ -79,7 +69,6 @@ const TESTIMONIALS: Testimonial[] = [
     role: 'Security Architect',
     quote:
       "Security is often an afterthought in most tutorials. Here, it's baked into every lesson. The peer reviews changed how I approach secure system design.",
-    tone: 'amber',
   },
 ];
 

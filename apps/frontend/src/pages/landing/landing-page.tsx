@@ -1,25 +1,25 @@
 import { BenefitsSection } from '@/features/landing/components/benefits-section';
 import { ClubsSection } from '@/features/landing/components/clubs-section';
+import { CtaSection } from '@/features/landing/components/cta-section';
 import { FaqSection } from '@/features/landing/components/faq-section';
 import { HeroSection } from '@/features/landing/components/hero-section';
 import { HowItWorksSection } from '@/features/landing/components/how-it-works-section';
 import { LandingFooter } from '@/features/landing/components/landing-footer';
 import { LandingHeader } from '@/features/landing/components/landing-header';
-import { StatsSection } from '@/features/landing/components/stats-section';
 import { TestimonialsSection } from '@/features/landing/components/testimonials-section';
 
 export function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <LandingHeader />
+      <LandingHeader transparent />
       <main>
         <HeroSection />
-        <StatsSection />
         <BenefitsSection />
-        <ClubsSection />
         <HowItWorksSection />
+        <ClubsSection />
         <TestimonialsSection />
         <FaqSection />
+        <CtaSection />
       </main>
       <LandingFooter />
     </div>

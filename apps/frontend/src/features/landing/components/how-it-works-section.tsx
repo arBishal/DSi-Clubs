@@ -1,65 +1,44 @@
-import { STEPS, TONE } from '../landing.constants';
+import { STEPS } from '../landing.constants';
+import { SectionTitle } from './section-title';
 
 export function HowItWorksSection() {
   return (
-    <section className="py-16">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="mb-16 text-center">
-          <h2 className="mb-6 font-heading text-4xl font-bold">
-            A 3-Step Journey to Success
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Our proven methodology ensures that every member reaches their
-            professional potential through continuous engagement.
-          </p>
-        </div>
+    <section id="how-it-works" className="bg-gray-100 py-24 lg:py-32">
+      <div className="mx-auto max-w-6xl px-6">
+        <SectionTitle
+          eyebrow="How it works"
+          title="How growth happens here"
+          subtitle="Three steps from joining a club to earning your credential."
+          className="mb-16"
+        />
 
-        <div className="relative">
-          {/* vertical spine */}
-          <div className="absolute bottom-0 left-6 top-0 hidden w-1 bg-border/40 sm:block md:left-1/2 md:-translate-x-1/2" />
-
-          <div className="space-y-24">
-            {STEPS.map((step) => {
-              const tone = TONE[step.tone];
-              const Icon = step.icon;
-              const reverse = step.order % 2 === 0;
-              return (
-                <div
-                  key={step.order}
-                  className={`relative flex flex-col items-center gap-12 md:flex-row lg:gap-24 ${
-                    reverse ? 'md:flex-row-reverse' : ''
-                  }`}
-                >
-                  <div className={`md:w-1/2 ${reverse ? '' : 'md:text-right'}`}>
-                    <h3
-                      className={`mb-4 font-heading text-3xl font-semibold ${tone.text}`}
-                    >
-                      {step.order}. {step.title}
-                    </h3>
-                    <p className="text-lg text-muted-foreground">
-                      {step.description}
-                    </p>
-                  </div>
-                  <div
-                    className={`z-10 flex size-16 shrink-0 items-center justify-center rounded-full text-xl font-bold text-white shadow-lg ring-[12px] ring-background ${tone.bg}`}
-                  >
-                    {step.order}
-                  </div>
-                  <div className="hidden md:block md:w-1/2">
-                    <div className="flex h-40 items-center gap-8 rounded-[2rem] border bg-muted/40 p-10 shadow-sm">
-                      <Icon
-                        className={`size-14 shrink-0 opacity-60 ${tone.text}`}
-                      />
-                      <div className="h-3 w-full overflow-hidden rounded-full bg-background shadow-inner">
-                        <div className={`h-full w-2/3 ${tone.bg}`} />
-                      </div>
-                    </div>
-                  </div>
+        {/* Horizontal numbered flow — numbers centered per column, connected by
+            a line that runs behind the nodes (first→last node centre). */}
+        <ol className="relative grid gap-10 md:grid-cols-3 md:gap-0">
+          <div className="absolute left-[16.67%] right-[16.67%] top-6 hidden h-px bg-gray-300 md:block" />
+          {STEPS.map((step) => {
+            const Icon = step.icon;
+            return (
+              <li
+                key={step.order}
+                className="flex flex-col items-center px-4 text-center"
+              >
+                <div className="relative z-10 flex size-12 items-center justify-center rounded-full border border-gray-300 bg-card font-heading text-base font-bold tabular-nums text-foreground">
+                  {String(step.order).padStart(2, '0')}
                 </div>
-              );
-            })}
-          </div>
-        </div>
+                <div className="mt-6 flex items-center gap-2">
+                  <Icon className="size-4 text-muted-foreground" />
+                  <h3 className="font-heading text-xl font-semibold text-foreground">
+                    {step.title}
+                  </h3>
+                </div>
+                <p className="mt-2 leading-relaxed text-muted-foreground">
+                  {step.description}
+                </p>
+              </li>
+            );
+          })}
+        </ol>
       </div>
     </section>
   );

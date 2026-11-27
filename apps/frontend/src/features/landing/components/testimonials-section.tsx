@@ -1,5 +1,6 @@
-import { TONE } from '../landing.constants';
+import { cn } from '@/lib/utils';
 import { useTestimonials } from '../hooks/use-landing';
+import { SectionTitle } from './section-title';
 
 function initials(name: string) {
   return name
@@ -10,42 +11,61 @@ function initials(name: string) {
     .toUpperCase();
 }
 
+/**
+ * Symmetric tilt for a balanced fan: the left card leans left, the middle stays
+ * straight (and sits on top), the right card leans right by the same angle. The
+ * same tilt applies on mobile, where the cards pile vertically (top leans left,
+ * middle straight, bottom leans right). Overlap is kept smaller than the card
+ * padding so one card never covers another's text. Hover straightens the card.
+ */
+const TILT = [
+  '-rotate-3 md:translate-y-4',
+  '-mt-4 rotate-0 z-10 md:mt-0 md:-ml-5 md:-translate-y-2',
+  '-mt-4 rotate-3 md:mt-0 md:-ml-5 md:translate-y-4',
+];
+
 export function TestimonialsSection() {
   const { data: testimonials = [] } = useTestimonials();
 
   return (
-    <section id="success-stories" className="bg-slate-900 py-16 text-white">
-      <div className="mx-auto max-w-[1800px] px-6">
-        <div className="mb-20 text-center">
-          <h2 className="mb-4 font-heading text-4xl font-bold">
-            Success Stories
-          </h2>
-          <p className="text-lg text-slate-400">
-            Hear from engineers who transformed their career through DSI Club.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t) => (
+    <section
+      id="success-stories"
+      className="overflow-hidden bg-gray-100 py-24 lg:py-32"
+    >
+      <div className="mx-auto max-w-6xl px-6">
+        <SectionTitle
+          eyebrow="Success stories"
+          title="Where it takes you"
+          subtitle="Engineers who grew their skills — and their careers — through DSi Klubs."
+          className="mb-20"
+        />
+        <div className="flex flex-col items-center md:flex-row md:items-stretch md:justify-center">
+          {testimonials.map((t, i) => (
             <figure
               key={t.id}
-              className="group rounded-[2.5rem] border border-slate-700/50 bg-slate-800/50 p-10 backdrop-blur-sm transition-all hover:border-slate-500"
+              className={cn(
+                'flex w-full max-w-xs flex-col gap-4 rounded-2xl border bg-card p-8 transition-transform duration-300 hover:z-20 md:w-[320px] md:max-w-none md:hover:translate-y-0 md:hover:rotate-0',
+                TILT[i],
+              )}
             >
-              <figcaption className="mb-8 flex items-center gap-5">
-                <div
-                  className={`flex size-16 items-center justify-center rounded-full text-lg font-bold text-white ring-4 ring-slate-700 transition-all ${TONE[t.tone].bg}`}
+              <blockquote className="flex-1 leading-relaxed text-foreground">
+                <span
+                  aria-hidden
+                  className="float-left mr-2 -mt-1 block h-6 font-heading text-6xl leading-none text-primary/50"
                 >
+                  &ldquo;
+                </span>
+                {t.quote}
+              </blockquote>
+              <figcaption className="flex items-center gap-4 border-t pt-6">
+                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-foreground font-heading text-sm font-semibold text-background">
                   {initials(t.name)}
                 </div>
                 <div>
-                  <div className="text-xl font-bold">{t.name}</div>
-                  <div className={`font-medium ${TONE[t.tone].text}`}>
-                    {t.role}
-                  </div>
+                  <div className="font-semibold text-foreground">{t.name}</div>
+                  <div className="text-sm text-muted-foreground">{t.role}</div>
                 </div>
               </figcaption>
-              <blockquote className="text-xl italic leading-relaxed text-slate-300">
-                “{t.quote}”
-              </blockquote>
             </figure>
           ))}
         </div>
