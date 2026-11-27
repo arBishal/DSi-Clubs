@@ -5,7 +5,7 @@ export function HowItWorksSection() {
     <section className="py-16">
       <div className="mx-auto max-w-[1400px] px-6">
         <div className="mb-16 text-center">
-          <h2 className="mb-6 font-serif text-4xl font-bold">
+          <h2 className="mb-6 font-heading text-4xl font-bold">
             A 3-Step Journey to Success
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
@@ -32,7 +32,7 @@ export function HowItWorksSection() {
                 >
                   <div className={`md:w-1/2 ${reverse ? '' : 'md:text-right'}`}>
                     <h3
-                      className={`mb-4 font-serif text-3xl font-semibold ${tone.text}`}
+                      className={`mb-4 font-heading text-3xl font-semibold ${tone.text}`}
                     >
                       {step.order}. {step.title}
                     </h3>

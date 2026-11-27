@@ -23,7 +23,7 @@ export function ClubsSection() {
       <div className="mx-auto max-w-[1800px] px-6">
         <div className="mb-16 flex flex-col items-end justify-between gap-4 md:flex-row">
           <div>
-            <h2 className="font-serif text-4xl font-bold">Find Your Tribe</h2>
+            <h2 className="font-heading text-4xl font-bold">Find Your Tribe</h2>
             <p className="mt-3 text-lg text-muted-foreground">
               Specialized guilds for every engineering discipline.
             </p>
@@ -58,7 +58,7 @@ export function ClubsSection() {
                   <div
                     className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t to-transparent p-10 text-white ${TONE[club.tone].gradient}`}
                   >
-                    <h4 className="mb-2 font-serif text-3xl font-semibold">
+                    <h4 className="mb-2 font-heading text-3xl font-semibold">
                       {club.name}
                     </h4>
                     <p className="text-lg text-white/90">{club.blurb}</p>

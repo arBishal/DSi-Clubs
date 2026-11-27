@@ -12,7 +12,7 @@ export function LandingFooter() {
       <div className="mx-auto max-w-[1800px] px-10 py-20">
         <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
           <div className="space-y-6 md:col-span-4">
-            <div className="font-serif text-2xl font-black text-primary">
+            <div className="font-heading text-2xl font-black text-primary">
               DSI Club
             </div>
             <p className="max-w-sm text-lg leading-relaxed text-muted-foreground">

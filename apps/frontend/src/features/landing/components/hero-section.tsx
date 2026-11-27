@@ -19,7 +19,7 @@ export function HeroSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-4xl px-6 py-24 text-center">
-        <h1 className="mb-8 font-serif text-4xl font-bold leading-tight tracking-tight text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
+        <h1 className="mb-8 font-heading text-4xl font-bold leading-tight tracking-tight text-white drop-shadow-lg sm:text-5xl lg:text-6xl">
           Grow Faster <span className="text-sky-300">Together</span>
           <br />
           in the DSI Club

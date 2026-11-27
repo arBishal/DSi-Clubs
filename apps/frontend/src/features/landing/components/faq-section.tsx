@@ -13,7 +13,7 @@ export function FaqSection() {
   return (
     <section className="mx-auto max-w-[1000px] px-6 py-16">
       <div className="mb-16 text-center">
-        <h2 className="font-serif text-4xl font-bold">
+        <h2 className="font-heading text-4xl font-bold">
           Frequently Asked Questions
         </h2>
       </div>

@@ -1,9 +1,10 @@
 import { GraduationCap } from 'lucide-react';
 
 /**
- * Canonical brand lockup — primary tile + serif wordmark. Used by the landing
- * header, app sidebar, and mobile top bar so the brand renders identically
- * everywhere. Non-interactive; wrap in a button/link where it should navigate.
+ * Canonical brand lockup — primary tile + heading-font wordmark. Used by the
+ * landing header, app sidebar, and mobile top bar so the brand renders
+ * identically everywhere. Non-interactive; wrap in a button/link where it
+ * should navigate.
  */
 export function BrandLogo({ caption = false }: { caption?: boolean }) {
   return (
@@ -12,7 +13,7 @@ export function BrandLogo({ caption = false }: { caption?: boolean }) {
         <GraduationCap className="size-5" />
       </span>
       <span className="text-left leading-tight">
-        <span className="block font-serif text-lg font-extrabold tracking-tight text-foreground">
+        <span className="block font-heading text-lg font-extrabold tracking-tight text-foreground">
           DSI Clubs
         </span>
         {caption && (

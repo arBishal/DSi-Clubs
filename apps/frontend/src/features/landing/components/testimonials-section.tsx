@@ -17,7 +17,7 @@ export function TestimonialsSection() {
     <section id="success-stories" className="bg-slate-900 py-16 text-white">
       <div className="mx-auto max-w-[1800px] px-6">
         <div className="mb-20 text-center">
-          <h2 className="mb-4 font-serif text-4xl font-bold">
+          <h2 className="mb-4 font-heading text-4xl font-bold">
             Success Stories
           </h2>
           <p className="text-lg text-slate-400">

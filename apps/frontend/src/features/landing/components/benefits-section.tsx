@@ -20,7 +20,7 @@ export function BenefitsSection() {
                     className={`size-6 transition-colors ${tone.text} group-hover:text-white`}
                   />
                 </div>
-                <h3 className="mb-4 font-serif text-2xl font-semibold">
+                <h3 className="mb-4 font-heading text-2xl font-semibold">
                   {benefit.title}
                 </h3>
                 <p className="leading-relaxed text-muted-foreground">
